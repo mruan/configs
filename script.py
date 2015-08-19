@@ -37,13 +37,20 @@ if answer[0] != 'Y' and answer[0] != 'y':
 for config in list_configs:
     # Check if it already exist
     if os.path.exists(config):
-        print_warn("WARN: %s exists in %s" %(config, home_dir))
-        # Create a backup copy just in case
-        print_warn("Back up %s to %s" % (config, config+'.bk'))
-        os.rename(config, config+'.bk')
+        # If same file:
+        if os.path.samefile(config, src_dir+config):
+            print_info("Same file, no need to update.")
+        # Symlink is removed, no backup
+        elif os.path.islink(config):
+            print_info("%s is a symlink, will be replaced" % config)
+        else:
+            print_warn("WARN: %s exists in %s" %(config, home_dir))
+            # Create a backup copy just in case
+            print_warn("Back up %s to %s" % (config, config+'.bk'))
+            os.rename(config, config+'.bk')
 
     # Create symbolic link 
-    print_info("Create symlink: %s -> %s\n" % (config, src_dir+config))
+    print_info("Create symlink: %s -> %s\n" %(config, src_dir+config))
     os.symlink(src_dir+config, config)
 
 os.chdir(src_dir)
