@@ -12,7 +12,7 @@
 (setq scroll-preserve-screen-position t)
 
 ; Show column number
-(column-number-mode 1)
+(column-number-mode t)
 
 ; Hide Tool bar for larger editing area
 (tool-bar-mode -1)
