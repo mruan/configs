@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+from sys import exit
 
 def clr_msg(msg, verbosity = 0):
     clr_code = ['\033[0m', '\033[94m', '\033[93m', '\033[91m']
@@ -16,27 +17,33 @@ def print_fatal(msg):
     print(clr_msg(msg, 3))
 
 # List of .* files
-list_configs = ['.bashrc', '.emacs']
+list_configs = ['.bashrc', 
+                '.emacs']
 
-verbosity = {'INFO':'\033[95m[Info]\033[0m',
-             'WARN':'\033[93m[WARN]\033[0m',
-             'FAIL':'\033[91m[FAIL]\033[0m'}
-
-src_path  = os.getcwd() + '/'
-home_path = os.environ['HOME']# + '/Documents'
+src_dir  = os.getcwd() + '/'
+home_dir = os.environ['HOME'] + '/Documents'
 
 # cd to home dir
-os.chdir(home_path)
-print("I'm in " + os.getcwd())
+os.chdir(home_dir)
+
+print("The following config files will be created in %s" % home_dir)
+for config in list_configs:
+    print_warn(config)
+answer = input("Shall we begin [y/n]> ")
+if answer[0] != 'Y' and answer[0] != 'y':
+    print("Nothing is done.")
+    exit(0)
 
 for config in list_configs:
-    print(config)
     # Check if it already exist
     if os.path.exists(config):
-        print_warn("WARN: %s exists in %s" %(config, home_path))
-    
-    print_info("Create symlink: %s -> %s" % (config, src_path+config))
-    os.symlink(src_path+config, config)
+        print_warn("WARN: %s exists in %s" %(config, home_dir))
+        # Create a backup copy just in case
+        print_warn("Back up %s to %s" % (config, config+'.bk'))
+        os.rename(config, config+'.bk')
 
-os.chdir(src_path)
-print("Back to %s" % os.getcwd())
+    # Create symbolic link 
+    print_info("Create symlink: %s -> %s\n" % (config, src_dir+config))
+    os.symlink(src_dir+config, config)
+
+os.chdir(src_dir)
