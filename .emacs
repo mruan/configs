@@ -4,7 +4,15 @@
 (setq inhibit-startup-message t)
 
 ; Centralize backup files
-(setq backup-directory-alist '(("." . "~/.emacsaves")))
+;(setq backup-directory-alist '(("." . "~/.emacsaves")))
+; Make no backup files
+(setq make-backup-files nil)
+
+; Preserve the location of the cursor when scrolling
+(setq scroll-preserve-screen-position t)
+
+; Show column number
+(column-number-mode 1)
 
 ; Hide Tool bar for larger editing area
 (tool-bar-mode -1)
