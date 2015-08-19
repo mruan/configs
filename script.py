@@ -21,7 +21,7 @@ list_configs = ['.bashrc',
                 '.emacs']
 
 src_dir  = os.getcwd() + '/'
-home_dir = os.environ['HOME'] + '/Documents'
+home_dir = os.environ['HOME'] + '/' # '/Documents/'
 
 # cd to home dir
 os.chdir(home_dir)
@@ -29,7 +29,7 @@ os.chdir(home_dir)
 print("The following config files will be created in %s" % home_dir)
 for config in list_configs:
     print_warn(config)
-answer = input("Shall we begin [y/n]> ")
+answer = input("Shall we begin? [y/n]> ")
 if answer[0] != 'Y' and answer[0] != 'y':
     print("Nothing is done.")
     exit(0)
@@ -39,10 +39,12 @@ for config in list_configs:
     if os.path.exists(config):
         # If same file:
         if os.path.samefile(config, src_dir+config):
-            print_info("Same file, no need to update.")
-        # Symlink is removed, no backup
+            print_info("Same file, skip: %s" % config)
+            continue
+        # Symlink will be unlinked, no backup
         elif os.path.islink(config):
-            print_info("%s is a symlink, will be replaced" % config)
+            print_warn("%s is a symlink, will be unlinked" % config)
+            os.unlink(config)
         else:
             print_warn("WARN: %s exists in %s" %(config, home_dir))
             # Create a backup copy just in case
@@ -50,7 +52,8 @@ for config in list_configs:
             os.rename(config, config+'.bk')
 
     # Create symbolic link 
-    print_info("Create symlink: %s -> %s\n" %(config, src_dir+config))
+    print_info("Create symlink: %s -> %s\n" %
+               (home_dir + config, src_dir + config))
     os.symlink(src_dir+config, config)
 
 os.chdir(src_dir)
