@@ -4,7 +4,7 @@
 (setq inhibit-startup-message t)
 
 ; Centralize backup files
-(setq backup-directory-alist `(("." . "~/.emacsaves")))
+(setq backup-directory-alist '(("." . "~/.emacsaves")))
 
 ; Hide Tool bar for larger editing area
 (tool-bar-mode -1)
